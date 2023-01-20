@@ -123,6 +123,9 @@ impl ScratchpadWindow {
 	/// Shows the window.
 	/// Clears the old items and adds the new Scratchpad windows.
 	pub fn show(&self) {
+		if self.window.is_visible() {
+			return;
+		}
 		self.add_items(get_scratchpad_applications());
 
 		self.list_box.set_has_focus(true);
