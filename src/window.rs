@@ -143,14 +143,19 @@ impl ScratchpadWindow {
 		self.list_items.borrow_mut().clear();
 	}
 
-	/// Clear all container items
+	/// Toggle the window
 	pub fn toggle(&self) {
-		self.window.set_visible(!self.window.is_visible());
+		if self.window.is_visible() {
+			self.hide()
+		} else {
+			self.show()
+		}
 	}
 
 	/// Add all node items
 	fn add_items(&self, nodes: Vec<Node>) {
 		if nodes.len() == 0 {
+			// Add placeholder
 			let placeholder = cascade! {
 				gtk::ListBoxRow::new();
 				..set_size_request(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -170,6 +175,7 @@ impl ScratchpadWindow {
 			self.list_box.add(&placeholder);
 			return;
 		}
+
 		for node in nodes {
 			let list_item = ListItem::new(node);
 			self.list_box.add(&list_item.widget);
