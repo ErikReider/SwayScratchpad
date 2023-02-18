@@ -29,6 +29,13 @@ impl ScratchpadWindow {
 	/// Create a new window and assign it to the given application.
 	pub fn new(app: &gtk::Application) -> Self {
 		let window = gtk::ApplicationWindow::new(app);
+
+		window.style_context().add_class(&gtk::STYLE_CLASS_CSD);
+		window
+			.style_context()
+			.add_class(&gtk::STYLE_CLASS_BACKGROUND);
+		window.style_context().add_class("unified");
+
 		window.set_title("Sway Scratchpad");
 		window.set_default_size(WINDOW_WIDTH, -1);
 		window.set_size_request(WINDOW_WIDTH, -1);
