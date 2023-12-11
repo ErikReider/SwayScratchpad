@@ -1,6 +1,6 @@
 use std::path::Path;
 
-use gtk::gio::DesktopAppInfo;
+use gtk::{gio::DesktopAppInfo, glib::clone, prelude::Continue};
 use swayipc::{Connection, Node};
 
 pub fn get_swayipc_conn() -> Connection {
@@ -26,11 +26,14 @@ pub fn get_scratchpad_applications() -> Vec<Node> {
 }
 
 pub fn show_scratchpad_application(node: &Node) {
-	let mut conn = get_swayipc_conn();
-	match conn.run_command(format!("[con_id={}] scratchpad show", node.id)) {
-		Ok(_) => (),
-		Err(e) => eprintln!("SwayIPC Error: {}", e),
-	}
+	gtk::glib::idle_add(clone!(@strong node => move || {
+		let mut conn = get_swayipc_conn();
+		match conn.run_command(format!("[con_id={}] scratchpad show", node.id)) {
+			Ok(_) => (),
+			Err(e) => eprintln!("SwayIPC Error: {}", e),
+		}
+		return Continue(false);
+	}));
 }
 
 pub fn node_get_class(node: &Node) -> Option<String> {
